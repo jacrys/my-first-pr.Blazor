@@ -1,50 +1,110 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var Langs = Model.Langs;
+    var selectList = Html.GetEnumSelectList<Octokit.Language>();
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - my_first_pr</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://kit.fontawesome.com/fc0ea6aa1b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="icon" type="image/png" href="~/img/favicon16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="~/img/favicon32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="~/img/favicon96x96.png" sizes="96x96">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/img/touch-ipad.png" >
+    <link rel="apple-touch-icon" sizes="114x114" href="~/img/touch-iphone.png" >
+    <link rel="apple-touch-icon" sizes="152x152" href="~/img/touch-ipad-ret.png" >
+    <link rel="stylesheet" href="~/css/nerd-font.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">my_first_pr</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        <nav class="navbar navbar-expand-sm fixed-top navbar-toggleable-sm navbar-dark bg-dkgrey border-bottom mb-3 px-5">
+            <div class="flex-container">
+                <form id="search" class="row row-cols-lg-auto g-3 align-items-center" asp-page="Index" method="post" role="form">
+                    <a class="navbar-brand" asp-area="" asp-page="/Index"><i class="nf nf-mdi-source_pull d-inline-block"></i>My First PR</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-page="/Index">Home</a>
+                            </li>
+                            @* <select class="form-select">
+                                <option value="C">C</option>
+                                <option value="C%2B%2B">C++</option>
+                                <option value="C%23">C#</option>
+                                <option value="Elixir">Elixir</option>
+                                <option value="Go">Go</option>
+                                <option value="HTML">HTML</option>
+                                <option value="Java">Java</option>
+                                <option value="JavaScript">JavaScript</option>
+                                <option value="PHP">PHP</option>
+                                <option value="Python">Python</option>
+                                <option value="Ruby">Ruby</option>
+                                <option value="Scala">Scala</option>
+                                <option value="TypeScript">TypeScript</option>
+                                <option value="Rust">Rust</option>
+                            </select> *@
+                            <select class="form-control"
+                                    id="langSelect"
+                                    name="language"
+                                    asp-items="selectList">
+                                <option value="">Select Programming Language...</option>
+                            </select>
+                            <li class="nav-item dropdown dropend">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Searches
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                                <button type="submit" form="search" asp-all-route-data="@(new Dictionary<string, string>{{"search","HACKTOBERFEST_ISSUES"}})" class="search-link"><i class="fas fa-pumpkin"></i>Hacktoberfest Issues</button>
+                                <button type="submit" form="search" asp-all-route-data="@(new Dictionary<string, string>{{"search","HACKTOBERFEST_EASY_ISSUES"}})" class="search-link"><i class="fas fa-pumpkin"></i>Hacktoberfest Easy Issues</button>
+                                <button type="submit" form="search" asp-all-route-data="@(new Dictionary<string, string>{{"search","HACKTOBERFEST_FIRST_ISSUES"}})" class="search-link"><i class="fas fa-pumpkin"></i>Hacktoberfest Good First Issues</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                <div id="login-container" class="ms-auto flex-inline">
+                    <div id="github-login">
+                        <a asp-action="Login" asp-controller="Auth" class="btn btn-outline-primary" asp-route-returnUrl=@($"{Context.Request.Scheme}://{Context.Request.Host}/signin-github/")>
+                            <i class="fab fa-github"></i>
+                            Log In with Github
+                        </a>
+                    </div>
+                    <div class="text-center">
+                        <small title="Due to GitHub restrictions on traffic, my app would be VERY limited in the number of queries it could make. By using your token, my app is making the queries on your behalf, and everyone gets their own limit.">Why do I require this?</small>
+                    </div>
                 </div>
+                }
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="flex-container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2019 - my_first_pr - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        <div class="flex-container justify-content-center">
+            &copy; 2021 - <a href="https:\\jacrys.com" >made with <i class="fas fa-peace fa-2x text-info"></i> <i class="fas fa-heart fa-2x text-danger"></i> and <i class="fad fa-bacon fa-2x"></i> in <img class="flag" src="img/tulsa-flag600.png"> by Jacrys</a>- 
+                <a href="https://www.producthunt.com/posts/myfirstpr?utm_source=badge-review&utm_medium=badge&utm_souce=badge-myfirstpr#discussion-body" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/review.svg?post_id=314414&theme=dark" alt="MyFirstPR - Simply a tool to find an issue to make a contribution to OSS | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    @RenderSection("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

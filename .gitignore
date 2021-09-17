@@ -1,0 +1,17 @@
+codealike.json
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+*.nuget.g.props
+*.nuget.g.targets
+project.lock.json
+project.assets.json
+.vs/*
+.vscode/*
+bin/*
+obj/*
+.vscode/
+appsettings.*.json
+appsettings.json

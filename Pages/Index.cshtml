@@ -3,8 +3,70 @@
 @{
     ViewData["Title"] = "Home page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <div class="row">
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <strong class="d-flex justify-content-center text-center">
+                <span class="w-25">
+                    Please Log In above.
+                </span>
+            </strong>
+        }
+        else
+        {
+            @if (Model.Issues != null && Model.Issues.Count() != 0)
+            {
+            <div id="issueGrid" class="flex-container issue-list">
+                @foreach (var issue in Model.Issues)
+                {
+                <div class="card box-shadow">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="@(issue.Url.Replace("https://api.github.com/repos","https://github.com"))" target="blank">
+                                        @issue.Title #@issue.Number
+                                    </a>
+                                </h5>
+                                <div class="d-flex justify-content-between my-2">
+                                    <span class="badge issue-status-@issue.State">@issue.State</span>
+                                </div>
+                                <p class="card-text">@issue.Body?.Substring(0,Math.Min(500,@issue.Body.Length)). . .</p>
+                                <p class="card-comments">
+                                    <span class="badge rounded-pill bg-primary">
+                                        <span class="translate-middle">
+                                            <i class="far fa-comment-alt-lines"></i>
+                                            <span class="comment-count">@issue.Comments</span>
+                                        </span>
+                                    </span>
+                                </p>
+                                <p class="card-footer">
+                                    <small class="text-muted">
+                                        Issue created at @issue.CreatedAt by @issue.User.Login
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+            else
+            {
+                <strong class="d-flex justify-content-center text-center w-100">
+                    <div class="empty-results">
+                        @if (HttpContext.Request.Query.Count != 0)
+                        {
+                            <img class="d-inline-block" src="~/img/ClKxKou0cyo.jpg">
+                        }
+                        <span>
+                            Please (optionally) select a programming language to filter to, and then select a search from above. It may take a few seconds, be patient please while I work on speeding it up. This was thrown together in about a day, so things are kinda rough around the edges.
+                        </span>
+                    </div>
+                </strong>
+            }
+        }
+    </div>
 </div>
