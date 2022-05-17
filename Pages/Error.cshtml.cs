@@ -1,27 +1,27 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace my_first_pr.Pages;
+namespace my_first_pr.Blazor.Pages;
 
 
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 [IgnoreAntiforgeryToken]
 public class ErrorModel : PageModel
 {
-    public Octokit.Language Langs { get; set; }
+	public Octokit.Language Langs { get; set; }
 
-    public string? RequestId { get; set; }
+	public string? RequestId { get; set; }
 
-    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+	public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-    private readonly ILogger<ErrorModel> _logger;
+	private readonly ILogger<ErrorModel> _logger;
 
-    public ErrorModel(ILogger<ErrorModel> logger)
-    {
-        _logger = logger;
-    }
+	public ErrorModel(ILogger<ErrorModel> logger)
+	{
+		_logger = logger;
+	}
 
-    public void OnGet()
-    {
-        RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-    }
+	public void OnGet()
+	{
+		RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+	}
 }
