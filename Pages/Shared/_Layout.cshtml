@@ -74,7 +74,7 @@
                 {
                 <div id="login-container" class="ms-auto flex-inline">
                     <div id="github-login">
-                        <a asp-action="Login" asp-controller="Auth" class="btn btn-outline-primary">
+                        <a asp-action="Login" asp-controller="Auth" class="btn btn-outline-primary" asp-route-returnUrl=@($"{Context.Request.Scheme}://{Context.Request.Host}/signin-github/")>
                             <i class="fab fa-github"></i>
                             Log In with Github
                         </a>

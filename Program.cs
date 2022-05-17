@@ -10,17 +10,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 Console.WriteLine(builder.Environment);
-builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json");
+builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true);
 builder.Services.AddAuthentication( options => {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = "Github";
 })
-    .AddCookie()
+    .AddCookie(options => {
+        options.Cookie.SameSite = SameSiteMode.Lax;
+    })
     .AddOAuth("Github", options => {
-        options.ClientId = builder.Configuration["GitHub:ClientId"];
-        options.ClientSecret = builder.Configuration["GitHub:ClientSecret"];
+        options.ClientId = builder.Configuration["GitHub:ClientId"] ?? Environment.GetEnvironmentVariable("GITHUB_CLIENT_ID");
+        options.ClientSecret = builder.Configuration["GitHub:ClientSecret"] ?? Environment.GetEnvironmentVariable("GITHUB_CLIENT_SECRET");
         options.CallbackPath = new PathString("/signin-github");
         options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
         options.TokenEndpoint = "https://github.com/login/oauth/access_token";
