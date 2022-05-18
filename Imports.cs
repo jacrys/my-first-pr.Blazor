@@ -4,3 +4,6 @@ global using Newtonsoft.Json;
 global using Newtonsoft.Json.Linq;
 global using Octokit;
 global using Octokit.Internal;
+global using Amazon;
+global using Amazon.SecretsManager;
+global using Amazon.SecretsManager.Model;
